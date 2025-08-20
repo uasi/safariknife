@@ -5,7 +5,11 @@ safariknife is a collection of utilities for Safari.
 ## Available subcommands
 
 - `cookies export`
-    - `--format=(http|json|jsonl|netscape)`
-    - `--input=(<path>|-)`
-    - `--output=(<path>|-)`
-    - `--only=(<domain>[/<path>]|<url>)`
+    - `--format=http|json|jsonl|netscape`
+    - `--input=<path>|-`
+    - `--output=<path>|-`
+    - `--only=<domain>[/<path>]|<url>`
+- `reading-list export`
+    - `--format=json|jsonl|text`
+    - `--input=<path>|-`
+    - `--output=<path>|-`
