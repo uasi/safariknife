@@ -184,7 +184,9 @@ struct CookieExporter {
             let encoder = baseJSONEncoder()
             encoder.outputFormatting.insert(.prettyPrinted)
 
-            return try encoder.encode(cookies)
+            var data = try encoder.encode(cookies)
+            data.appendLineFeed()
+            return data
         case .jsonl:
             let encoder = baseJSONEncoder()
 
