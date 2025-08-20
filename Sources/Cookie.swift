@@ -42,4 +42,8 @@ struct Cookie: Encodable {
         self.comment = comment
         self.commentURL = commentURL
     }
+
+    func trimmedHTTPCookie() -> HTTPCookie? {
+        return HTTPCookie(properties: [.domain: domain, .path: path, .name: name, .value: value])
+    }
 }

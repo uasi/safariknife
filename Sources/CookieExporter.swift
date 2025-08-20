@@ -57,6 +57,7 @@ struct CookieExporter {
     }
 
     enum Format: String, CaseIterable, ExpressibleByArgument {
+        case http
         case json
         case jsonl
         case netscape
@@ -74,6 +75,8 @@ struct CookieExporter {
 
         private init?(fromURL url: URL) {
             switch url.pathExtension.lowercased() {
+            case "http":
+                self = .http
             case "json":
                 self = .json
             case "jsonl":
@@ -113,6 +116,11 @@ struct CookieExporter {
             detectingFromOutput: self.output, preferredFormat: preferredFormat
         )
         self.domainAndPath = parseDomainAndPath(domainAndPath)
+
+        if self.format == .http && self.domainAndPath == nil {
+            print("error: http format requires the `--only` option", to: &StandardError.shared)
+            return
+        }
     }
 
     func export() {
@@ -165,6 +173,13 @@ struct CookieExporter {
         }
 
         switch format {
+        case .http:
+            let httpCookies: [HTTPCookie] = cookies.compactMap { $0.trimmedHTTPCookie() }
+            let headers = HTTPCookie.requestHeaderFields(with: httpCookies)
+
+            var data = headers["Cookie"]!.data(using: .utf8)!
+            data.appendLineFeed()
+            return data
         case .json:
             let encoder = baseJSONEncoder()
             encoder.outputFormatting.insert(.prettyPrinted)
