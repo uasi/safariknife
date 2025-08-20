@@ -89,11 +89,30 @@ struct CookieExporter {
     private let input: Input
     private let output: Output
     private let format: Format
+    private let domainAndPath: (String, String)?
 
-    init(input: String?, output: String?, preferredFormat: Format?) {
+    init?(input: String?, output: String?, preferredFormat: Format?, domainAndPath: String?) {
+        func parseDomainAndPath(_ value: String?) -> (String, String)? {
+            guard var value = value else { return nil }
+            value = String(value.trimmingPrefix("."))
+            if !value.starts(with: "http://") && !value.starts(with: "https://") {
+                value = "https://\(value)"
+            }
+
+            guard let url = URL(string: value) else {
+                print("error: could not parse value passed to `--only`", to: &StandardError.shared)
+                return nil
+            }
+
+            return (url.host ?? "", url.path == "" ? "/" : url.path)
+        }
+
         self.input = Input(input)
         self.output = Output(output)
-        self.format = Format(detectingFromOutput: self.output, preferredFormat: preferredFormat)
+        self.format = Format(
+            detectingFromOutput: self.output, preferredFormat: preferredFormat
+        )
+        self.domainAndPath = parseDomainAndPath(domainAndPath)
     }
 
     func export() {
@@ -107,7 +126,7 @@ struct CookieExporter {
 
         let cookies: [Cookie]
         do {
-            cookies = try BinaryCookiesParser.parse(inputData)
+            cookies = try filterCookies(BinaryCookiesParser.parse(inputData))
         } catch {
             print("error: could not parse cookies: \(error)", to: &StandardError.shared)
             return
@@ -130,6 +149,11 @@ struct CookieExporter {
             print("error: could not write to output: \(error)", to: &StandardError.shared)
             return
         }
+    }
+
+    private func filterCookies(_ cookies: [Cookie]) -> [Cookie] {
+        guard let (domain, path) = self.domainAndPath else { return cookies }
+        return cookies.filter { $0.domain.trimmingPrefix(".") == domain && $0.path == path }
     }
 
     private func encode(_ cookies: [Cookie]) throws -> Data {

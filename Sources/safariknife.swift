@@ -41,8 +41,17 @@ struct Safariknife: ParsableCommand {
             )
             var format: CookieExporter.Format?
 
+            @Option(
+                name: [.long],
+                help:
+                    "Only export cookies from this domain and path. Example: 'example.com/foo'"
+            )
+            var only: String?
+
             func run() {
-                let exporter = CookieExporter(input: input, output: output, preferredFormat: format)
+                let exporter = CookieExporter(
+                    input: input, output: output, preferredFormat: format, domainAndPath: only)
+                guard let exporter = exporter else { return }
                 exporter.export()
             }
         }
