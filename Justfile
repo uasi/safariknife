@@ -1,6 +1,12 @@
 _default:
     @just --list
 
+build:
+    swift build
+
+build-release:
+    swift build --configuration release
+
 format:
     swift format format --in-place --recursive Package.swift Sources
 
