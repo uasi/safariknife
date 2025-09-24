@@ -59,7 +59,9 @@ struct CookieExporter {
     enum Format: String, CaseIterable, ExpressibleByArgument {
         case http
         case json
+        case jsonPuppeteer = "json:puppeteer"
         case jsonl
+        case jsonlPuppeteer = "jsonl:puppeteer"
         case netscape
 
         static let `default`: Self = .json
@@ -187,12 +189,28 @@ struct CookieExporter {
             var data = try encoder.encode(cookies)
             data.appendLineFeed()
             return data
+        case .jsonPuppeteer:
+            let encoder = baseJSONEncoder()
+            encoder.outputFormatting.insert(.prettyPrinted)
+
+            var data = try encoder.encode(cookies.map { $0.puppeteerFlavor() })
+            data.appendLineFeed()
+            return data
         case .jsonl:
             let encoder = baseJSONEncoder()
 
             var data = Data()
             for cookie in cookies {
                 data.append(try encoder.encode(cookie))
+                data.appendLineFeed()
+            }
+            return data
+        case .jsonlPuppeteer:
+            let encoder = baseJSONEncoder()
+
+            var data = Data()
+            for cookie in cookies {
+                data.append(try encoder.encode(cookie.puppeteerFlavor()))
                 data.appendLineFeed()
             }
             return data

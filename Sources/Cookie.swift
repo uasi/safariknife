@@ -46,4 +46,28 @@ struct Cookie: Encodable {
     func trimmedHTTPCookie() -> HTTPCookie? {
         return HTTPCookie(properties: [.domain: domain, .path: path, .name: name, .value: value])
     }
+
+    func puppeteerFlavor() -> PuppeteerFlavor {
+        return PuppeteerFlavor(self)
+    }
+
+    struct PuppeteerFlavor: Encodable {
+        let name: String
+        let value: String
+        let domain: String
+        let path: String
+        let expires: Double?
+        let secure: Bool
+        let httpOnly: Bool
+
+        init(_ cookie: Cookie) {
+            self.name = cookie.name
+            self.value = cookie.value
+            self.domain = cookie.domain
+            self.path = cookie.path
+            self.expires = cookie.expiresDate?.timeIntervalSince1970
+            self.secure = cookie.isSecure
+            self.httpOnly = cookie.isHTTPOnly
+        }
+    }
 }
