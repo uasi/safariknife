@@ -167,13 +167,6 @@ struct CookieExporter {
     }
 
     private func encode(_ cookies: [Cookie]) throws -> Data {
-        func baseJSONEncoder() -> JSONEncoder {
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
-            encoder.dateEncodingStrategy = .secondsSince1970
-            return encoder
-        }
-
         switch format {
         case .http:
             let httpCookies: [HTTPCookie] = cookies.compactMap { $0.trimmedHTTPCookie() }
@@ -183,21 +176,19 @@ struct CookieExporter {
             data.appendLineFeed()
             return data
         case .json:
-            let encoder = baseJSONEncoder()
-            encoder.outputFormatting.insert(.prettyPrinted)
+            let encoder = JSONEncoder.forPrettyJSON()
 
             var data = try encoder.encode(cookies)
             data.appendLineFeed()
             return data
         case .jsonPuppeteer:
-            let encoder = baseJSONEncoder()
-            encoder.outputFormatting.insert(.prettyPrinted)
+            let encoder = JSONEncoder.forPrettyJSON()
 
             var data = try encoder.encode(cookies.map { $0.puppeteerFlavor() })
             data.appendLineFeed()
             return data
         case .jsonl:
-            let encoder = baseJSONEncoder()
+            let encoder = JSONEncoder.forPrettyJSONLines()
 
             var data = Data()
             for cookie in cookies {
@@ -206,7 +197,7 @@ struct CookieExporter {
             }
             return data
         case .jsonlPuppeteer:
-            let encoder = baseJSONEncoder()
+            let encoder = JSONEncoder.forPrettyJSONLines()
 
             var data = Data()
             for cookie in cookies {
