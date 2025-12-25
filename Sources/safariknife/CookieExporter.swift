@@ -27,7 +27,7 @@ struct CookieExporter {
             case .file(let url):
                 return try Data(contentsOf: url)
             case .defaultFile:
-                return try Data(contentsOf: StandardLocations.containeredCookiesFile)
+                return try Data(contentsOf: Resources.containeredCookiesFile)
             }
         }
     }

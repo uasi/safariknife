@@ -23,7 +23,7 @@ struct ReadingListExporter {
             case .file(let url):
                 data = try Data(contentsOf: url)
             case .defaultFile:
-                data = try Data(contentsOf: StandardLocations.bookmarksFile)
+                data = try Data(contentsOf: Resources.bookmarksFile)
             }
 
             return try BookmarkTree(data: data)

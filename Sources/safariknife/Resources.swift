@@ -2,7 +2,7 @@
 
 import Foundation
 
-struct StandardLocations {
+struct Resources {
     static let containeredLibraryDirectory = URL.libraryDirectory.appending(
         path: "Containers/com.apple.Safari/Data/Library")
     static let containeredCookiesFile = containeredLibraryDirectory.appending(
