@@ -25,26 +25,26 @@ struct Safariknife: ParsableCommand {
             @Option(
                 name: [.long, .short],
                 help:
-                    "Path to export cookies from. '-' for stdin. Default: Safari's default cookies file."
+                    "Path to export cookies from. '-' for stdin. (default: Safari's default cookies file)"
             )
             var input: String?
 
             @Option(
                 name: [.long, .short],
-                help: "Path to export cookies to. '-' for stdout. Default: stdout.")
+                help: "Path to export cookies to. '-' for stdout. (default: '-')")
             var output: String?
 
             @Option(
                 name: [.long, .short],
                 help:
-                    "Output format: json, jsonl, or netscape. If not set, detected from output file extension or defaults to json."
+                    "Output format. If not set, detected from output file extension or defaults to json."
             )
             var format: CookieExporter.Format?
 
             @Option(
                 name: [.long],
                 help:
-                    "Only export cookies from this domain and path. Example: 'example.com/foo'"
+                    "Only export cookies from this domain and path. (example: 'example.com/foo')"
             )
             var only: String?
 
@@ -72,19 +72,19 @@ struct Safariknife: ParsableCommand {
             @Option(
                 name: [.long, .short],
                 help:
-                    "Path to export items from. Default: Safari's default bookmarks database."
+                    "Path to export items from. (default: Safari's default bookmarks database)"
             )
             var input: String?
 
             @Option(
                 name: [.long, .short],
-                help: "Path to export items to. '-' for stdout. Default: stdout.")
+                help: "Path to export items to. '-' for stdout. (default: '-')")
             var output: String?
 
             @Option(
                 name: [.long, .short],
                 help:
-                    "Output format: json, jsonl, or text. If not set, detected from output file extension or defaults to json."
+                    "Output format. If not set, detected from output file extension or defaults to json."
             )
             var format: ReadingListExporter.Format?
 
