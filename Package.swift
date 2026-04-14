@@ -16,6 +16,9 @@ let package = Package(
             name: "safariknife",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ],
+            linkerSettings: [
+                .linkedFramework("ApplicationServices")
             ]
         )
     ]

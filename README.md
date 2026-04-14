@@ -9,6 +9,7 @@ safariknife is a collection of utilities for Safari.
     - `--input=<path>|-`
     - `--output=<path>|-`
     - `--only=<domain>[/<path>]|<url>`
+- `reading-list add <url>`
 - `reading-list export`
     - `--format=json|jsonl|text`
     - `--input=<path>|-`

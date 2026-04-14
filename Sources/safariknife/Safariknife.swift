@@ -60,9 +60,28 @@ struct Safariknife: ParsableCommand {
     struct ReadingList: ParsableCommand {
         static let configuration = CommandConfiguration(
             abstract: "Manage reading list.",
-            subcommands: [Export.self],
+            subcommands: [Add.self, Export.self],
             defaultSubcommand: nil
         )
+
+        struct Add: ParsableCommand {
+            static let configuration = CommandConfiguration(
+                abstract: "Add item to reading list.",
+                discussion: "This command requires Safari to be running."
+            )
+
+            @Argument(help: "URL to add.")
+            var url: String
+
+            func run() {
+                do {
+                    try SafariAppleEvent.ReadingList.add(url: url)
+                    print("Added \(url) to reading list.")
+                } catch {
+                    print("error: \(error.localizedDescription)", to: &StandardError.shared)
+                }
+            }
+        }
 
         struct Export: ParsableCommand {
             static let configuration = CommandConfiguration(
